@@ -218,7 +218,7 @@ do
     for PLATFORM in "${ARCH_LIST[@]}"
     do
         log "Pulling $IMG - $PLATFORM ... "
-        COMMAND="$CTR_CMD images pull --label io.cri-containerd.image=managed --platform $PLATFORM $IMG $ECRPWD"
+        COMMAND="$CTR_CMD images pull --label io.cri-containerd.image=managed --platform $PLATFORM $ECRPWD $IMG"
         CMDID=$(aws ssm send-command --instance-ids "$INSTANCE_ID" \
             --document-name "AWS-RunShellScript" --comment "Pull Image ${IMG:0:75} - $PLATFORM" \
             --parameters commands="$COMMAND" \
