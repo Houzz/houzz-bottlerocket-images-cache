@@ -5,9 +5,9 @@ Description: Bottlerocket instance to snapshot data volume with configurable net
 
 Parameters:
   AmiID:
-    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Type: AWS::EC2::Image::Id
     Description: "The ID of the AMI."
-    Default: /aws/service/bottlerocket/aws-k8s-1.27/x86_64/latest/image_id
+    Default: ami-06925b13649acba0a # bottlerocket-aws-k8s-1.32-nvidia-x86_64-v1.45.0-2f4223e5
   InstanceType:
     Type: String
     Description: "EC2 instance type to launch"
@@ -39,7 +39,7 @@ Parameters:
   AssociatePublicIpAddress:
     Type: String
     Description: "Whether to associate a public IP address to the instance"
-    Default: "true"
+    Default: "false"
     AllowedValues:
       - "true"
       - "false"
@@ -62,8 +62,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service:
-                !Sub "ec2.${AWS::URLSuffix}"
+              Service: !Sub "ec2.${AWS::URLSuffix}"
             Action:
               - "sts:AssumeRole"
       ManagedPolicyArns:
@@ -91,34 +90,38 @@ Resources:
             [settings.host-containers.admin]
             enabled = true
         BlockDeviceMappings:
-        - DeviceName: /dev/xvda
-          Ebs:
-            VolumeSize: 10
-            VolumeType: gp3
-            DeleteOnTermination: true
-        - DeviceName: /dev/xvdb
-          Ebs:
-            VolumeSize: !Ref SnapshotSize
-            VolumeType: gp3
-            Encrypted:
-              Fn::If:
-                - Encrypt
-                - true
-                - false
-            KmsKeyId:
-              Fn::If:
-                - UseCustomKMSId
-                - !Ref KMSId
-                - !Ref AWS::NoValue
-            Throughput: 1000
-            Iops: 4000
-            DeleteOnTermination: true
+          - DeviceName: /dev/xvda
+            Ebs:
+              VolumeSize: 10
+              VolumeType: gp3
+              DeleteOnTermination: true
+          - DeviceName: /dev/xvdb
+            Ebs:
+              VolumeSize: !Ref SnapshotSize
+              VolumeType: gp3
+              Encrypted:
+                Fn::If:
+                  - Encrypt
+                  - true
+                  - false
+              KmsKeyId:
+                Fn::If:
+                  - UseCustomKMSId
+                  - !Ref KMSId
+                  - !Ref AWS::NoValue
+              Throughput: 1000
+              Iops: 4000
+              DeleteOnTermination: true
         NetworkInterfaces:
           - AssociatePublicIpAddress: !Ref AssociatePublicIpAddress
             DeviceIndex: "0"
             Groups:
-              - !If [UseCustomSecurityGroup, !Ref SecurityGroupId, !Ref 'AWS::NoValue']
-            SubnetId: !If [UseCustomSubnet, !Ref SubnetId, !Ref 'AWS::NoValue']
+              - !If [
+                  UseCustomSecurityGroup,
+                  !Ref SecurityGroupId,
+                  !Ref "AWS::NoValue",
+                ]
+            SubnetId: !If [UseCustomSubnet, !Ref SubnetId, !Ref "AWS::NoValue"]
 
   BottlerocketInstance:
     Type: AWS::EC2::Instance

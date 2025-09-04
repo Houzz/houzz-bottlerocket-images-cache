@@ -214,7 +214,7 @@ log "[5/8] Pulling images:"
 for IMG in "${IMAGES_LIST[@]}"
 do
     ECR_REGION=$(echo "$IMG" | sed -n "s/^[0-9]*\.dkr\.ecr\.\([a-z1-9-]*\)\.amazonaws\.com.*$/\1/p")
-    [ -n "$ECR_REGION" ] && ECRPWD="--u AWS:$(aws ecr get-login-password --region "$ECR_REGION")" || ECRPWD=""
+    [ -n "$ECR_REGION" ] && ECRPWD="-u AWS:$(aws ecr get-login-password --region "$ECR_REGION")" || ECRPWD=""
     for PLATFORM in "${ARCH_LIST[@]}"
     do
         log "Pulling $IMG - $PLATFORM ... "
