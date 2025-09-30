@@ -48,3 +48,19 @@ AWS_PROFILE=my-legacy-sso-ivy ./snapshot.sh -r us-west-2 -sn subnet-081eb4ab3886
 ```
 
 `snap-0dae37e1b9f80201f`
+
+### prod ollama runtime
+
+```bash
+AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge gcr.io/istio-release/proxyv2:1.17.5,docker.io/ollama/ollama:0.12.3,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.14.3,nvcr.io/nvidia/k8s-device-plugin:v0.14.3
+```
+
+`snap-007f44dd23e7db95c`
+
+### prod torch serve runtime
+
+```bash
+AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge gcr.io/istio-release/proxyv2:1.17.5,index.docker.io/pytorch/torchserve-kfs@sha256:3c7e2c25399c4b7edfe5897b0d1b59c714f50c495a74c68efdffc51f2fd3092b,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.14.3,nvcr.io/nvidia/k8s-device-plugin:v0.14.3
+```
+
+`snap-0f3bc9fa8eed688a7`
