@@ -49,6 +49,17 @@ AWS_PROFILE=my-legacy-sso-ivy ./snapshot.sh -r us-west-2 -sn subnet-081eb4ab3886
 
 `snap-0dae37e1b9f80201f`
 
+### ivy arc runtime - arm64
+
+<!-- ami-0a7773157106f8334 -->
+
+```bash
+AWS_PROFILE=my-legacy-sso-ivy ./snapshot.sh -A arm64 -r us-west-2 -sn subnet-081eb4ab3886e6f73 -a ami-0a7773157106f8334 -i c8g.xlarge 754384638740.dkr.ecr.us-west-2.amazonaws.com/actions-runner:v1.49,754384638740.dkr.ecr.us-west-2.amazonaws.com/docker:dind,quay.io/prometheus/node-exporter:v1.3.1,registry.k8s.io/dns/k8s-dns-node-cache:1.23.1,754384638740.dkr.ecr.us-west-2.amazonaws.com/promtail:3.0.0
+
+```
+
+`snap-055843ebf47633c56`
+
 ### prod ollama runtime
 
 ```bash
