@@ -75,3 +75,19 @@ AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a
 ```
 
 `snap-0f3bc9fa8eed688a7`
+
+### stg triton 25-09 py3 runtime
+
+```bash
+AWS_PROFILE=my-legacy-sso-stg ./snapshot.sh -r us-west-2 -a ami-06925b13649acba0a -i g5.xlarge quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.17.1,gcr.io/istio-release/proxyv2:1.17.5,nvcr.io/nvidia/k8s/dcgm-exporter:3.3.8-3.6.0-ubuntu22.04,nvcr.io/nvidia/tritonserver:25.09-py3,754384638740.dkr.ecr.us-west-2.amazonaws.com/qpext:latest,754384638740.dkr.ecr.us-west-2.amazonaws.com/storage-initializer:v0.11.0
+```
+
+`snap-0dd1440e47ce0c8b3`
+
+### prod triton 25-09 py3 runtime
+
+```bash
+AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge gcr.io/istio-release/proxyv2:1.17.5,nvcr.io/nvidia/tritonserver:25.09-py3,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.17.1
+```
+
+`snap-09104410e26b37baa`
