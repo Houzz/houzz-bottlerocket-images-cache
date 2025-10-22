@@ -100,3 +100,11 @@ AWS_PROFILE=my-legacy-sso-stg ./snapshot.sh -r us-west-2 -a ami-06925b13649acba0
 ```
 
 `snap-0c19dc0c7c55dcb15`
+
+### prod mailserver worker base image
+
+```bash
+AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-05f5efa6134aa9771 -i c7a.2xlarge 754384638740.dkr.ecr.us-west-2.amazonaws.com/mailserver:prod-main-20250828040558-4345c,docker.io/hashicorp/vault:1.14.0,quay.io/prometheus/node-exporter:v1.6.1,registry.k8s.io/dns/k8s-dns-node-cache:1.23.1
+```
+
+`snap-003a142b728dfe013`
