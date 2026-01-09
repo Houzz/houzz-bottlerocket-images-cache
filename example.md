@@ -109,10 +109,10 @@ AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a
 
 `snap-003a142b728dfe013`
 
-### prod elevation worker base image
+### prod elevation worker base image (new)
 
 ```bash
-AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge 754384638740.dkr.ecr.us-west-2.amazonaws.com/ai-elevation-segmentation-sqs-worker:base-251016-dev0,gcr.io/istio-release/proxyv2:1.17.5,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.17.1
+AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge 754384638740.dkr.ecr.us-west-2.amazonaws.com/floorplan-segmentation:base-260102-dev1,gcr.io/istio-release/proxyv2:1.17.5,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.17.1
 ```
 
-`snap-0bea3082bbb4bed6f`
+`snap-0adab131f4d8523db`
