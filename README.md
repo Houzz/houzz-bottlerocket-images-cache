@@ -1,4 +1,5 @@
 # Caching Container Images for AWS Bottlerocket Instances
+
 The purpose of this sample is to reduce the boot time of containers with large images by caching the images in the data volume of Bottlerocket OS.
 
 Data analytics and machine learning workloads often require large container images (usually measured by Gigabytes), which can take several minutes to pull and extract from Amazon ECR or other image registry. Reduce image pulling time is the key of improving efficiency of launching these containers.
@@ -18,17 +19,64 @@ To demonstrate the process of caching images in EBS snapshots and launching them
 5. Terminate the instance.
 
 ## Build EBS snapshot with cached container image
+
 1. Set up [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
 2. Run the following command to clone this projects in your local environment.
+
     ```bash
     git clone https://github.com/aws-samples/bottlerocket-images-cache/
     cd bottlerocket-images-cache/
     ```
 
 3. Run `snapshot.sh` to build the EBS snapshot. Replace `us-west-2` to your region, and replace `public.ecr.aws/eks-distro/kubernetes/pause:3.2` to a comma seperated list of container images.
+
     ```bash
     ./snapshot.sh -r us-west-2 public.ecr.aws/eks-distro/kubernetes/pause:3.2
     ```
+
+## Build EBS snapshot using GitHub Actions
+
+You can also build EBS snapshots using the provided GitHub Actions workflow, which provides a user-friendly interface for configuring snapshot parameters.
+
+### Prerequisites
+
+1. Set up GitHub Secrets for AWS credentials for each environment you want to use:
+   - `AWS_ACCESS_KEY_ID_STG` and `AWS_SECRET_ACCESS_KEY_STG` for staging
+   - `AWS_ACCESS_KEY_ID_PROD` and `AWS_SECRET_ACCESS_KEY_PROD` for production
+   - `AWS_ACCESS_KEY_ID_IVY` and `AWS_SECRET_ACCESS_KEY_IVY` for ivy environment
+
+   To add secrets:
+   1. Go to your repository Settings → Secrets and variables → Actions
+   2. Click "New repository secret"
+   3. Add each secret name and value
+
+2. Ensure the AWS credentials have the required IAM permissions (see [Required IAM Policy](#required-iam-policy) section)
+
+### Using the Workflow
+
+1. Navigate to the "Actions" tab in your GitHub repository
+2. Select "Build Bottlerocket Image Cache Snapshot" workflow
+3. Click "Run workflow"
+4. Fill in the workflow inputs:
+   - **Environment**: Choose `stg`, `prod`, or `ivy`
+   - **GPU**: Enable if you need GPU-enabled instances (uses NVIDIA AMI)
+   - **GPU Driver Version**: NVIDIA k8s device plugin version (e.g., `v0.17.1`) - only used when GPU is enabled
+   - **Architecture**: Choose `amd64` or `arm64`
+   - **Instance Type**: Select from available options:
+     - `g5.xlarge` - GPU instance (NVIDIA)
+     - `c6a.xlarge` - Non-GPU x86_64
+     - `c7a.2xlarge` - Non-GPU x86_64 (larger)
+     - `c8g.xlarge` - arm64 (Graviton)
+   - **Images**: Comma-separated list of container images to cache (e.g., `quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.17.1`)
+
+5. Click "Run workflow" to start the snapshot creation process
+
+The workflow will automatically:
+
+- Select the appropriate AMI based on GPU and architecture settings
+- Configure the subnet based on the selected environment
+- Run the snapshot creation process
+- Display the created snapshot ID in the workflow summary
 
 ## Command-line Parameters
 
@@ -122,9 +170,9 @@ If you choose to write the snapshot ID to SSM parameter store, the following IAM
 ## Using snapshot with Amazon EKS
 
 There are 3 approaches to provision Amazon EC2 nodes for Amazon EKS cluster:
-* EKS Managed Node Group
-* Self managed nodes
-* EC2 Fleet managed by [Karpenter](https://karpenter.sh/)
+- EKS Managed Node Group
+- Self managed nodes
+- EC2 Fleet managed by [Karpenter](https://karpenter.sh/)
 
 You can use EBS snapshot created by the script with nodes created by all the approaches.
 
@@ -137,6 +185,7 @@ You can use a launch template to create volume from snapshot. When creating laun
 You can specify snapshot ID in a Karpenter node template. You should also specify AMI used when provisioning node is `BottleRocket`. Add the content on `EC2NodeClass` (or `AWSNodeTemplate` on older release of Karpenter):
 
 `v1beta1` API:
+
 ```yaml
 apiVersion: karpenter.k8s.aws/v1beta1
 kind: EC2NodeClass
@@ -154,6 +203,7 @@ spec:
 ```
 
 `v1alpha1` API:
+
 ```yaml
 apiVersion: karpenter.k8s.aws/v1alpha1
 kind: AWSNodeTemplate

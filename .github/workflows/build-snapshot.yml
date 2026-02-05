@@ -1,0 +1,148 @@
+name: Build Bottlerocket Image Cache Snapshot
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target AWS environment"
+        required: true
+        type: choice
+        options:
+          - stg
+          - prod
+          - ivy
+      gpu:
+        description: "Use GPU-enabled instance (determines AMI)"
+        required: true
+        type: boolean
+        default: false
+      gpu_driver_version:
+        description: "NVIDIA k8s device plugin version (e.g., v0.17.1)"
+        required: false
+        type: string
+        default: "v0.17.1"
+      architecture:
+        description: "CPU architecture"
+        required: true
+        type: choice
+        options:
+          - amd64
+          - arm64
+        default: "amd64"
+      instance_type:
+        description: "EC2 instance type"
+        required: true
+        type: choice
+        options:
+          - g5.xlarge
+          - c6a.xlarge
+          - c7a.2xlarge
+          - c8g.xlarge
+        default: "g5.xlarge"
+      images:
+        description: "Comma-separated container images to cache"
+        required: true
+        type: string
+
+jobs:
+  build-snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set AWS credentials based on environment
+        id: aws-creds
+        run: |
+          if [ "${{ inputs.environment }}" == "stg" ]; then
+            echo "access_key_id=${{ secrets.AWS_ACCESS_KEY_ID_STG }}" >> $GITHUB_OUTPUT
+            echo "secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY_STG }}" >> $GITHUB_OUTPUT
+          elif [ "${{ inputs.environment }}" == "prod" ]; then
+            echo "access_key_id=${{ secrets.AWS_ACCESS_KEY_ID_PROD }}" >> $GITHUB_OUTPUT
+            echo "secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}" >> $GITHUB_OUTPUT
+          else
+            echo "access_key_id=${{ secrets.AWS_ACCESS_KEY_ID_IVY }}" >> $GITHUB_OUTPUT
+            echo "secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY_IVY }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ steps.aws-creds.outputs.access_key_id }}
+          aws-secret-access-key: ${{ steps.aws-creds.outputs.secret_access_key }}
+          aws-region: us-west-2
+
+      - name: Determine AMI ID
+        id: ami
+        run: |
+          if [ "${{ inputs.architecture }}" == "arm64" ]; then
+            echo "ami_id=ami-0a7773157106f8334" >> $GITHUB_OUTPUT
+          elif [ "${{ inputs.gpu }}" == "true" ]; then
+            echo "ami_id=ami-06925b13649acba0a" >> $GITHUB_OUTPUT
+          else
+            echo "ami_id=ami-05f5efa6134aa9771" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine subnet ID
+        id: subnet
+        run: |
+          if [ "${{ inputs.environment }}" == "prod" ]; then
+            echo "subnet_id=subnet-9ed02ae8" >> $GITHUB_OUTPUT
+            echo "use_subnet=true" >> $GITHUB_OUTPUT
+          elif [ "${{ inputs.environment }}" == "ivy" ]; then
+            echo "subnet_id=subnet-081eb4ab3886e6f73" >> $GITHUB_OUTPUT
+            echo "use_subnet=true" >> $GITHUB_OUTPUT
+          else
+            echo "subnet_id=" >> $GITHUB_OUTPUT
+            echo "use_subnet=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build snapshot
+        id: snapshot
+        run: |
+          set -e
+
+          # Build snapshot.sh command
+          CMD="./snapshot.sh -q -r us-west-2 -a ${{ steps.ami.outputs.ami_id }} -i ${{ inputs.instance_type }}"
+
+          # Add architecture flag if arm64
+          if [ "${{ inputs.architecture }}" == "arm64" ]; then
+            CMD="$CMD -A arm64"
+          fi
+
+          # Add subnet flag if needed
+          if [ "${{ steps.subnet.outputs.use_subnet }}" == "true" ]; then
+            CMD="$CMD -sn ${{ steps.subnet.outputs.subnet_id }}"
+          fi
+
+          # Add images
+          CMD="$CMD ${{ inputs.images }}"
+
+          echo "Running: $CMD"
+
+          # Run snapshot.sh with -q flag
+          # Logs go to stderr (visible in workflow), snapshot ID goes to stdout
+          SNAPSHOT_ID=$(eval $CMD)
+
+          echo "snapshot_id=$SNAPSHOT_ID" >> $GITHUB_OUTPUT
+          echo "Snapshot created: $SNAPSHOT_ID"
+
+      - name: Output snapshot ID
+        run: |
+          echo "## Snapshot Created Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Snapshot ID:** \`${{ steps.snapshot.outputs.snapshot_id }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Instance Type:** ${{ inputs.instance_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Architecture:** ${{ inputs.architecture }}" >> $GITHUB_STEP_SUMMARY
+          echo "**GPU Enabled:** ${{ inputs.gpu }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ inputs.gpu }}" == "true" ]; then
+            echo "**GPU Driver Version:** ${{ inputs.gpu_driver_version }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "**AMI ID:** ${{ steps.ami.outputs.ami_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Cached Images:**" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "${{ inputs.images }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
