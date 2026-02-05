@@ -116,3 +116,11 @@ AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a
 ```
 
 `snap-0adab131f4d8523db`
+
+### stg texture worker base image
+
+```bash
+AWS_PROFILE=my-legacy-sso-stg ./snapshot.sh -r us-west-2 -a ami-06925b13649acba0a -i g5.xlarge quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.17.1,754384638740.dkr.ecr.us-west-2.amazonaws.com/proxyv2:1.24.6-tetrate3,nvcr.io/nvidia/k8s/dcgm-exporter:3.3.8-3.6.0-ubuntu22.04,registry.k8s.io/dns/k8s-dns-node-cache:1.23.1,754384638740.dkr.ecr.us-west-2.amazonaws.com/ai-texture-service-sqs-worker:base-cached
+```
+
+`snap-0c2d69d9200f09e0b`
