@@ -1,5 +1,4 @@
 
-
 # example command to build gpu image
 
 ```bash
@@ -8,14 +7,14 @@ AWS_PROFILE=my-legacy-sso-stg ./snapshot.sh -r us-west-2 -a ami-06925b13649acba0
 
 ## use this to get ami id
 
-https://docs.aws.amazon.com/eks/latest/userguide/retrieve-ami-id-bottlerocket.html
+<https://docs.aws.amazon.com/eks/latest/userguide/retrieve-ami-id-bottlerocket.html>
 
 ```bash
 AWS_PROFILE=my-legacy-sso-ivy aws ssm get-parameter --name /aws/service/bottlerocket/aws-k8s-1.32/x86_64/latest/image_id \
     --region us-west-2 --output text
 ```
 
-## memos for what we are building now.
+## memos for what we are building now
 
 ### stg triton runtime
 
@@ -39,8 +38,6 @@ AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a
 ```
 
 ### ivy ghactions runtime
-
-
 
 ```bash
 AWS_PROFILE=my-legacy-sso-ivy ./snapshot.sh -r us-west-2 -sn subnet-081eb4ab3886e6f73 -a ami-05f5efa6134aa9771 -i c6a.xlarge 754384638740.dkr.ecr.us-west-2.amazonaws.com/actions-runner:v1.49,754384638740.dkr.ecr.us-west-2.amazonaws.com/docker:dind,quay.io/prometheus/node-exporter:v1.3.1,registry.k8s.io/dns/k8s-dns-node-cache:1.23.1,754384638740.dkr.ecr.us-west-2.amazonaws.com/promtail:3.0.0
@@ -92,7 +89,6 @@ AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a
 
 `snap-09104410e26b37baa`
 
-
 ### stg elevation worker base image
 
 ```bash
@@ -124,3 +120,11 @@ AWS_PROFILE=my-legacy-sso-stg ./snapshot.sh -r us-west-2 -a ami-06925b13649acba0
 ```
 
 `snap-0c2d69d9200f09e0b`
+
+### prod texture worker base image
+
+```bash
+AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge "754384638740.dkr.ecr.us-west-2.amazonaws.com/ai-texture-service-sqs-worker:base-cached,gcr.io/istio-release/proxyv2:1.17.5,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.17.1,nvcr.io/nvidia/k8s/dcgm-exporter:3.3.8-3.6.0-ubuntu22.04,registry.k8s.io/dns/k8s-dns-node-cache:1.23.1"
+```
+
+`snap-041b74a983748396b`
