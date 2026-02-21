@@ -128,3 +128,14 @@ AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a
 ```
 
 `snap-041b74a983748396b`
+
+### prod 3d render worker image
+
+the painful part being the current docker file is not base + code setup thus the app image is not much cachable.
+
+```bash
+AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge "754384638740.dkr.ecr.us-west-2.amazonaws.com/proxyv2:1.24.6-tetrate3,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.14.3,nvcr.io/nvidia/k8s/dcgm-exporter:3.3.8-3.6.0-ubuntu22.04,registry.k8s.io/dns/k8s-dns-node-cache:1.23.1,
+688976015282.dkr.ecr.us-west-2.amazonaws.com/metric_agent:multi-arch-241211"
+```
+
+`snap-0bf9619dea32c7b35`
