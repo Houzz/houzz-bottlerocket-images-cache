@@ -37,6 +37,8 @@ somehow triton cannot recognize driver. need some wait time (sleep xxx)
 AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge 602401143452.dkr.ecr.us-west-2.amazonaws.com/amazon-k8s-cni:v1.19.6-eksbuild.1,602401143452.dkr.ecr.us-west-2.amazonaws.com/amazon/aws-network-policy-agent:v1.2.2-eksbuild.1,602401143452.dkr.ecr.us-west-2.amazonaws.com/eks/aws-ebs-csi-driver:v1.45.0,602401143452.dkr.ecr.us-west-2.amazonaws.com/eks/csi-node-driver-registrar:v2.14.0-eksbuild.3,602401143452.dkr.ecr.us-west-2.amazonaws.com/eks/livenessprobe:v2.16.0-eksbuild.3,public.ecr.aws/eks-distro/kubernetes-csi/node-driver-registrar:v2.8.0-eks-1-27-3,public.ecr.aws/eks-distro/kubernetes-csi/livenessprobe:v2.10.0-eks-1-27-3,602401143452.dkr.ecr.us-west-2.amazonaws.com/eks/kube-proxy:v1.32.5-minimal-eksbuild.2,gcr.io/istio-release/proxyv2:1.17.5,688976015282.dkr.ecr.us-west-2.amazonaws.com/triton@sha256:b41202e88d846e77c11d93e2ae6c80f308f30cc01075563547a2ab3f3cb24476,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.14.3,nvcr.io/nvidia/k8s-device-plugin:v0.14.3
 ```
 
+`snap-048f8342d692537d5`
+
 ### ivy ghactions runtime
 
 ```bash
@@ -44,7 +46,7 @@ AWS_PROFILE=my-legacy-sso-ivy ./snapshot.sh -r us-west-2 -sn subnet-081eb4ab3886
 
 ```
 
-`snap-0dae37e1b9f80201f`
+`snap-023f6908a1bf0c5fd`
 
 ### ivy arc runtime - arm64
 
@@ -55,7 +57,7 @@ AWS_PROFILE=my-legacy-sso-ivy ./snapshot.sh -A arm64 -r us-west-2 -sn subnet-081
 
 ```
 
-`snap-055843ebf47633c56`
+`snap-09ca3002f154991bf`
 
 ### prod ollama runtime
 
@@ -63,7 +65,7 @@ AWS_PROFILE=my-legacy-sso-ivy ./snapshot.sh -A arm64 -r us-west-2 -sn subnet-081
 AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge gcr.io/istio-release/proxyv2:1.17.5,docker.io/ollama/ollama:0.12.3,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.14.3,nvcr.io/nvidia/k8s-device-plugin:v0.14.3
 ```
 
-`snap-007f44dd23e7db95c`
+`snap-0f67124be9e314224`
 
 ### stg torch serve runtime
 
@@ -79,7 +81,7 @@ AWS_PROFILE=my-legacy-sso-stg ./snapshot.sh -r us-west-2 -a ami-06925b13649acba0
 AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge gcr.io/istio-release/proxyv2:1.17.5,index.docker.io/pytorch/torchserve-kfs@sha256:3c7e2c25399c4b7edfe5897b0d1b59c714f50c495a74c68efdffc51f2fd3092b,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.14.3,nvcr.io/nvidia/k8s-device-plugin:v0.14.3
 ```
 
-`snap-0f3bc9fa8eed688a7`
+`snap-0902401a6d736d6a6`
 
 ### stg triton 25-09 py3 runtime
 
@@ -95,7 +97,7 @@ AWS_PROFILE=my-legacy-sso-stg ./snapshot.sh -r us-west-2 -a ami-06925b13649acba0
 AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-06925b13649acba0a -i g5.xlarge gcr.io/istio-release/proxyv2:1.17.5,nvcr.io/nvidia/tritonserver:25.09-py3,quay.io/prometheus/node-exporter:v1.6.0,nvcr.io/nvidia/k8s-device-plugin:v0.17.1
 ```
 
-`snap-09104410e26b37baa`
+`snap-0fe7685021deb43e4`
 
 ### stg elevation worker base image
 

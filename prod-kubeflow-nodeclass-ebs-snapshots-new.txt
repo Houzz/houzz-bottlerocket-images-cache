@@ -1,0 +1,15 @@
+# prod-kubeflow EKS — EC2NodeClass -> EBS snapshot ID (rebuilt)
+# Same layout as prod-kubeflow-nodeclass-ebs-snapshots.txt — use these snapshot IDs in spec.blockDeviceMappings[].ebs.snapshotID
+# Date: 2026-04-02
+
+# nodeclass name	new snapshot id	(previous id)
+ollama-cached	snap-0f67124be9e314224	(was snap-007f44dd23e7db95c)
+torchserve-cached	snap-0902401a6d736d6a6	(was snap-0f3bc9fa8eed688a7)
+triton-2509	snap-0fe7685021deb43e4	(was snap-09104410e26b37baa)
+triton-transformer	snap-048f8342d692537d5	(was snap-0cac83d4f2aec9eb2)
+
+# Copy-paste lines for NodeClass / GitOps (name<TAB>snap-id only):
+ollama-cached	snap-0f67124be9e314224
+torchserve-cached	snap-0902401a6d736d6a6
+triton-2509	snap-0fe7685021deb43e4
+triton-transformer	snap-048f8342d692537d5
