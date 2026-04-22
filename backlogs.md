@@ -173,3 +173,11 @@ AWS_PROFILE=my-legacy-sso-stg ./snapshot.sh -r us-west-2 -a ami-06925b13649acba0
 ```
 
 snap-0b0be00935453532b
+
+### prod saas c2
+
+```bash
+AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a ami-0a7773157106f8334 -i c8g.2xlarge "754384638740.dkr.ecr.us-west-2.amazonaws.com/proxyv2:1.24.6-tetrate3,754384638740.dkr.ecr.us-west-2.amazonaws.com/fluentd:v1.17-fluent-coralogix-multiarch-v1.2,quay.io/prometheus/node-exporter:v1.6.0,688976015282.dkr.ecr.us-west-2.amazonaws.com/c2-php8.2-fpm:2025-06-16-18-31-47,688976015282.dkr.ecr.us-west-2.amazonaws.com/c2-nginx:2024-06-14-01-54-45,688976015282.dkr.ecr.us-west-2.amazonaws.com/beats-exporter:latest,public.ecr.aws/elastic/filebeat:7.17.9,public.ecr.aws/docker/library/redis:6.0.20-alpine3.19,754384638740.dkr.ecr.us-west-2.amazonaws.com/feat-eval-service:2025_11_20_17_04_10"
+```
+
+snap-0eb8a32dd77a50871
