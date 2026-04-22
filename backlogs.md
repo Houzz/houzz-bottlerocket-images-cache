@@ -165,3 +165,11 @@ AWS_PROFILE=my-legacy-sso-prod ./snapshot.sh -r us-west-2 -sn subnet-9ed02ae8 -a
 ```
 
 snap-0e217ca169fefd608
+
+### stg paddlex runtime
+
+```bash
+AWS_PROFILE=my-legacy-sso-stg ./snapshot.sh -r us-west-2 -a ami-06925b13649acba0a -i c8a.2xlarge "quay.io/prometheus/node-exporter:v1.6.0,754384638740.dkr.ecr.us-west-2.amazonaws.com/proxyv2:1.24.6-tetrate3,"
+```
+
+snap-0b0be00935453532b
